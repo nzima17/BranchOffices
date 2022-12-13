@@ -39,7 +39,7 @@ public class BranchOfficesController {
 
     @GetMapping("/add")
     public void insertData(@RequestParam String name,@RequestParam String address,@RequestParam double budget) throws SQLException, ClassNotFoundException {
-        service.insertData(name,address,budget);
+        service.insertData(new BranchOffices(-1,name,address,budget));
     }
 
     @GetMapping("/change-to")

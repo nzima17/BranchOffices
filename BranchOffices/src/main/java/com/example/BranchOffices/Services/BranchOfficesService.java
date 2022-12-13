@@ -49,7 +49,6 @@ public class BranchOfficesService {
         var prst = connection.prepareStatement(sql);
 
         var result = prst.executeQuery();
-
         var results = new ArrayList<BranchOffices>();
 
         while(result.next()){
@@ -74,7 +73,7 @@ public class BranchOfficesService {
         connection.close();
     }
 
-    public void insertData(String name, String address,double budget) throws ClassNotFoundException, SQLException {
+    public void insertData(BranchOffices branchOffices) throws ClassNotFoundException, SQLException {
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         Connection connection = DriverManager.getConnection(url, "nazima","abcdefg");
 
@@ -83,9 +82,9 @@ public class BranchOfficesService {
                 """;
 
         var prst = connection.prepareStatement(sql);
-        prst.setString(1,name);
-        prst.setString(2,address);
-        prst.setDouble(3,budget);
+        prst.setString(1,branchOffices.getName());
+        prst.setString(2,branchOffices.getAddress());
+        prst.setDouble(3,branchOffices.getBudget());
 
         prst.execute();
         connection.close();
@@ -128,16 +127,13 @@ public class BranchOfficesService {
 
         var prst = connection.prepareStatement(sql);
         prst.setInt(1, id);
-
         var result = prst.executeQuery();
-
         if(!result.next())
             return null;
 
         var value = new BranchOffices(result.getInt(1),result.getString(2),result.getString(3),result.getDouble(4));
 
         connection.close();
-
         return value;
     }
 }
