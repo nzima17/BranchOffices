@@ -12,7 +12,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 @Service
 public class BranchOfficesService {
-
     static final int budgetPort = 8000;
     static final String serverName = "DESKTOP-1G0TK5F";
     static final String dbName = "memento_mori";
@@ -21,20 +20,21 @@ public class BranchOfficesService {
     @Autowired
     RestTemplateBuilder restTemplateBuilder;
 
-    public void updateById(int id,String name, String address) throws ClassNotFoundException, SQLException {
+    public void updateById(BranchOffices branchOffices) throws ClassNotFoundException, SQLException {
 
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
         Connection connection = DriverManager.getConnection(url, "nazima","abcdefg");
 
         String sql = """ 
-                UPDATE dbo.BranchOffices SET name=? , address=? WHERE id=?
+                UPDATE dbo.BranchOffices SET name=? , address=?, budget=? WHERE id=?
                 """;
 
         var prst = connection.prepareStatement(sql);
-        prst.setString(1,name);
-        prst.setString(2,address);
-        prst.setInt(3,id);
+        prst.setString(1,branchOffices.getName());
+        prst.setString(2,branchOffices.getAddress());
+        prst.setDouble(3,branchOffices.getBudget());
+        prst.setInt(4,branchOffices.getId());
 
         prst.execute();
         connection.close();
@@ -107,7 +107,7 @@ public class BranchOfficesService {
 
         var rest = restTemplateBuilder.build();
         var urlBuilder = UriComponentsBuilder.fromHttpUrl("http://localhost:"+budgetPort+"/budget/income")
-                .queryParam("action", budget)
+                .queryParam("moneyAmount", budget)
                 .queryParam("description", description)
                 .queryParam("BranchOfficeId",id);
         var query = urlBuilder.build().toUri().toString();

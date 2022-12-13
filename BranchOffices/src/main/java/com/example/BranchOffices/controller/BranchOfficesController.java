@@ -18,12 +18,12 @@ public class BranchOfficesController {
     }
 
     @GetMapping("/update")
-    public ResponseEntity updateData(@RequestParam int id,@RequestParam String name,@RequestParam String address) throws SQLException, ClassNotFoundException {
+    public ResponseEntity updateData(@RequestParam int id,@RequestParam String name,@RequestParam String address,@RequestParam double budget) throws SQLException, ClassNotFoundException {
         var result = service.selectById(id);
         if(result == null) {
             return ResponseEntity.badRequest().build();
         }
-        service.updateById(id,name,address);
+        service.updateById(new BranchOffices(id,name,address,budget));
         return ResponseEntity.ok().build();
     }
 
